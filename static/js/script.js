@@ -7,31 +7,58 @@ const validateEmail = (email) => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 };
+const validPhone = (phone) => {
+  return /^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(
+    phone.trim().replaceAll(" ", "")
+  );
+};
+
 if (forms[0] !== undefined)
   if (forms[0].getAttribute("id") == "sign-up") {
     forms[0].addEventListener("submit", async function (event) {
       event.preventDefault();
+      const name = forms[0].elements["name"].value;
       const email = document.getElementById("email").value;
+      const phone = document
+        .getElementById("phone")
+        .value.trim()
+        .replaceAll(" ", "");
+      const address = document.getElementById("address").value;
       const password = document.getElementById("password").value;
+      console.log(name, phone, email, password);
+
       if (
+        name &&
         validateEmail(email) &&
+        validPhone(phone) &&
         password.length >= 8 &&
         password.length <= 20
       ) {
-        console.log("Email and password are valid");
+        userData = {
+          name,
+          email,
+          phone,
+          address,
+          password,
+        };
+        // console.log("Data is valid");
         // Send the form data to the server
-        const response = await fetch(
-          `http://localhost:3000/register/${email}/${password}`
-        )
+        const response = await fetch(`http://localhost:3000/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        })
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
             userData = data;
             if (data.status == 201) {
               localStorage.setItem("userEmail", email);
-              setTimeout(() => {
-                window.location.replace("/");
-              }, 2000);
+              window.location.replace("/");
+            } else {
+              alert(data.message);
             }
           });
       }
@@ -48,13 +75,20 @@ if (forms[0] !== undefined)
         password.length >= 8 &&
         password.length <= 20
       ) {
-        console.log("Email and password are valid");
+        // console.log("Email and password are valid");
         // Send the form data to the server
         const response = await fetch(
           `http://localhost:3000/login/${email}/${password}`
         )
           .then((response) => response.json())
-          .then((data) => data.status == 200 && window.location.replace("/"));
+          .then((data) => {
+            if (data.status == 200) {
+              localStorage.setItem("userEmail", email);
+              window.location.replace("/");
+            } else {
+              alert(data.message);
+            }
+          });
       }
     });
   }
@@ -97,3 +131,59 @@ if (logoutBtn) {
     window.location.replace("/");
   });
 }
+const getUserData = async () => {
+  const email = localStorage.getItem("userEmail");
+  if (email) {
+    const response = await fetch(
+      `http://localhost:3000/getUserByEmail/${email}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          userData = data.data;
+          setUserData(data.data);
+        }
+      });
+  }
+};
+getUserData();
+function setUserData(userData) {
+  console.log(userData);
+  if (window.location.pathname == "/my-profile.html") {
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const userPhone = document.getElementById("userPhone");
+    const userAddress = document.getElementById("userAddress");
+
+    userName.textContent =
+      userData.name == null ? "Plese  fill in your name" : userData.name;
+    userEmail.textContent =
+      userData.email == null ? "Please fill in your email" : userData.email;
+    userPhone.textContent =
+      userData.phone == null ? "Please fill in your phone" : userData.phone;
+    userAddress.textContent =
+      userData.address == null
+        ? "Please fill in your address"
+        : userData.address;
+  }
+}
+
+const deleteBtn = document.getElementById("deleteBtn");
+if (deleteBtn)
+  deleteBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:3000/deleteUserByEmail`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          localStorage.removeItem("userEmail");
+          window.location.replace("/auth/login.html");
+        }
+      });
+  });

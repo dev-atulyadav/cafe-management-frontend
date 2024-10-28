@@ -90,7 +90,7 @@
             </svg>
           </a>
           <button
-          id="logoutBtn"
+            id="logoutBtn"
             class="btn btn-outline-danger d-flex justify-content-center align-items-center gap-1 fw-semibold"
           >
             Logout
@@ -120,7 +120,7 @@
       <div class="row justify-content-center w-100">
         <div class="col-md-8">
           <div class="card mb-3">
-            <div class="card-body">
+            <div id="profileCard" class="card-body">
               <div class="d-flex justify-content-center align-items-center">
                 <img
                   src="https://avatars.githubusercontent.com/u/140043491?v=4"
@@ -129,44 +129,136 @@
                   alt=""
                 />
               </div>
-              <div class="row">
+              <div
+                style="width: 90%"
+                class="d-flex justify-content-between align-items-center"
+              >
                 <div class="col-sm-3">
                   <p class="mb-0">Full Name</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">John Doe</p>
+                  <p id="userName" class="text-muted mb-0">John Doe</p>
                 </div>
+                <button class="btn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </button>
               </div>
               <hr />
-              <div class="row">
+              <div
+                style="width: 90%"
+                class="d-flex justify-content-between align-items-center"
+              >
                 <div class="col-sm-3">
                   <p class="mb-0">Email</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">john.doe@example.com</p>
+                  <p id="userEmail" class="text-muted mb-0">
+                    john.doe@example.com
+                  </p>
                 </div>
+                <button class="btn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </button>
               </div>
               <hr />
-              <div class="row">
+              <div
+                style="width: 90%"
+                class="d-flex justify-content-between align-items-center"
+              >
                 <div class="col-sm-3">
                   <p class="mb-0">Phone</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">(123) 456-7890</p>
+                  <p id="userPhone" class="text-muted mb-0">(123) 456-7890</p>
                 </div>
+                <button class="btn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </button>
               </div>
               <hr />
-              <div class="row">
+              <div
+                style="width: 90%"
+                class="d-flex justify-content-between align-items-center"
+              >
                 <div class="col-sm-3">
                   <p class="mb-0">Address</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">1234 Main St, Anytown, CA 12345</p>
+                  <p id="userAddress" class="text-muted mb-0">
+                    1234 Main St, Anytown, CA 12345
+                  </p>
                 </div>
+                <button class="btn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </button>
               </div>
               <hr />
               <div class="d-flex justify-content-end align-items-center gap-4">
-                <button class="btn rounded btn-danger" type="button">
+                <button
+                  id="deleteBtn"
+                  class="btn rounded btn-danger"
+                  type="button"
+                >
                   Delete Account
                 </button>
                 <button class="btn rounded btn-primary" type="button">
