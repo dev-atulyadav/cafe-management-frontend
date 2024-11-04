@@ -186,8 +186,6 @@ setupDeleteUserButton();
 
 // Fetch Dishes
 const fetchDishes = async () => {
-  console.log("hi");
-
   try {
     const response = await fetch("http://localhost:3000/dishes/getAllDish");
     const data = await response.json();
@@ -275,12 +273,12 @@ const updateCartOnServer = async (orderBtn) => {
     );
     const data = await response.json();
     if (data.status === 200) {
-      orderBtn.setAttribute("class","btn-success btn orderBtn")
+      orderBtn.setAttribute("class", "btn-success btn orderBtn");
       setTimeout(() => {
-        orderBtn.setAttribute("class","btn-primary btn orderBtn")
+        orderBtn.setAttribute("class", "btn-primary btn orderBtn");
       }, 1000);
-      console.log(cart, data);}
-    else alert("Please Login to add meals in cart");
+      console.log(cart, data);
+    } else alert("Please Login to add meals in cart");
   } catch (error) {
     console.error("Error updating cart on server:", error);
   }
@@ -351,6 +349,11 @@ const createProductCard = (dishData) => {
 
   const removeButton = createButton("Remove", "btn btn-danger");
   const confirmButton = createButton("Confirm", "btn btn-success");
+  confirmButton.addEventListener("click",()=>{
+    alert("You will be redirected to payment page!")
+    window.location.pathname = "/payment/payment-method.html"
+    
+  })
 
   buttonContainer.append(removeButton, confirmButton);
   cardBody.append(cardTitle, cardText, quantityText, buttonContainer);
