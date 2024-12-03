@@ -132,6 +132,7 @@ const fetchUserData = async () => {
       const data = await response.json();
       if (data.status === 200) {
         userData = data.data;
+        cart = userData.cart;
         displayUserData(userData);
       }
     } catch (error) {
@@ -191,74 +192,67 @@ const fetchDishes = async () => {
     const data = await response.json();
     if (data.status === 200) {
       dishes = data.data;
-      renderDishes();
+      for (const dish of dishes) {
+        if (
+          dish.category === "top-rated" &&
+          (window.location.pathname === "/index.html" ||
+            window.location.pathname === "/")
+        ) {
+          createTopRatedDishCard(dish);
+        }
+      }
+      if (window.location.pathname === "/menu.html") {
+        renderDishesOnMenu();
+      }
     }
   } catch (error) {
     console.error("Error fetching dishes:", error);
   }
 };
 
-const renderDishes = () => {
-  const cardContainer = document.getElementById("card-container");
-  dishes.forEach((value) => {
-    const card = createDishCard(value);
-    cardContainer.appendChild(card);
-  });
-  addOrderButtonListeners();
-};
-
-const createDishCard = (value) => {
-  const card = document.createElement("div");
-  card.id = value._id;
-  card.className = "card";
-  card.style.width = "18rem";
-
+function createTopRatedDishCard(dish) {
+  const colA = document.createElement("a");
+  colA.style.textDecoration = "none";
+  colA.href = "/menu.html";
+  colA.classList.add("col");
+  const cardDiv = document.createElement("div");
+  cardDiv.classList.add("card");
   const img = document.createElement("img");
-  img.src = value.image || "";
-  img.className = "card-img-top h-50";
-  img.alt = value.name;
-  card.appendChild(img);
-
-  const cardBody = document.createElement("div");
-  cardBody.className = "card-body";
-
+  img.src = dish.image;
+  img.classList.add("card-img-top");
+  img.style.height = "200px";
+  img.style.objectFit = "cover";
+  img.alt = dish.altText;
+  cardDiv.appendChild(img);
+  const cardBodyDiv = document.createElement("div");
+  cardBodyDiv.classList.add("card-body");
   const cardTitle = document.createElement("h5");
-  cardTitle.className = "card-title";
-  cardTitle.textContent = value.name;
-
+  cardTitle.classList.add("card-title");
+  cardTitle.textContent = dish.name;
   const cardText = document.createElement("p");
-  cardText.className = "card-text";
-  cardText.innerHTML = value.description;
+  cardText.classList.add("card-text");
+  cardText.textContent = dish.description;
+  cardBodyDiv.appendChild(cardTitle);
+  cardBodyDiv.appendChild(cardText);
+  cardDiv.appendChild(cardBodyDiv);
+  colA.appendChild(cardDiv);
+  document.getElementById("card-container").appendChild(colA);
+}
 
-  const orderBtn = document.createElement("a");
-  orderBtn.href = "#";
-  orderBtn.className = "btn btn-primary orderBtn";
-  orderBtn.textContent = "Order Now";
+const addOrderButtonListener = async (e) => {
+  e.preventDefault();
+  const dishId = e.target.closest(".dish-container").id;
+  const quantity = 1;
+  const existingDish = cart.find((item) => item.dishId === dishId);
 
-  cardBody.append(cardTitle, cardText, orderBtn);
-  card.appendChild(cardBody);
+  if (existingDish) {
+    existingDish.quantity += quantity;
+  } else {
+    cart.push({ dishId, quantity });
+  }
 
-  return card;
-};
-
-const addOrderButtonListeners = () => {
-  const orderBtns = document.getElementsByClassName("orderBtn");
-  Array.from(orderBtns).forEach((orderBtn) => {
-    orderBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const dishId = orderBtn.closest(".card").id;
-      const quantity = 1;
-      const existingDish = cart.find((item) => item.dishId === dishId);
-
-      if (existingDish) {
-        existingDish.quantity += quantity;
-      } else {
-        cart.push({ dishId, quantity });
-      }
-
-      await updateCartOnServer(orderBtn);
-    });
-  });
+  await updateCartOnServer(e.target);
+  document.getElementById("cartCounter").textContent = cart.length;
 };
 
 const updateCartOnServer = async (orderBtn) => {
@@ -272,13 +266,16 @@ const updateCartOnServer = async (orderBtn) => {
       }
     );
     const data = await response.json();
-    if (data.status === 200) {
-      orderBtn.setAttribute("class", "btn-success btn orderBtn");
-      setTimeout(() => {
-        orderBtn.setAttribute("class", "btn-primary btn orderBtn");
-      }, 1000);
-      console.log(cart, data);
-    } else alert("Please Login to add meals in cart");
+    if (orderBtn) {
+      if (data.status === 200) {
+        orderBtn.setAttribute("class", "btn-success btn position-absolute");
+        setTimeout(() => {
+          orderBtn.setAttribute("class", "btn btn-primary position-absolute");
+        }, 1000);
+      } else alert("Please Login to add meals in cart");
+    } else {
+      window.location.reload();
+    }
   } catch (error) {
     console.error("Error updating cart on server:", error);
   }
@@ -295,6 +292,8 @@ const getCartDataFromServer = async (dishCart) => {
             `http://localhost:3000/dishes/getDishByDishId/${element.dishId}`
           );
           const data = await response.json();
+          console.log(data);
+
           if (data.data) {
             createProductCard(data.data);
           }
@@ -313,16 +312,35 @@ const getCartDataFromServer = async (dishCart) => {
     setTimeout(() => getCartDataFromServer(dishCart), 3000);
   }
 };
-
+const removeProductFromCart = (dishId) => {
+  const dish = userData.cart.filter((item) => item.dishId == dishId)[0];
+  if (Number(dish.quantity) > 1) {
+    const newQuantity = dish.quantity - 1;
+    cart.map((val) => {
+      if (val.dishId == dishId) {
+        val.quantity = newQuantity;
+      }
+    });
+  } else {
+    let dishCard = document.getElementById(dishId);
+    cart.map((val, index) => {
+      if (val.dishId == dishId) {
+        cart.splice(index, 1);
+      }
+    });
+    dishCard.remove();
+  }
+  updateCartOnServer();
+};
 // Create Product Card in Cart
 const createProductCard = (dishData) => {
   const container = document.createElement("div");
-  container.className = "d-flex border-bottom p-3";
+  container.id = dishData._id;
+  container.className = "d-flex border-bottom p-3 flex-column flex-sm-row";
 
   const img = document.createElement("img");
   img.src = dishData.image;
-  img.style.width = "20rem";
-  img.className = "rounded border";
+  img.className = "rounded border cartImage";
 
   const textContainer = document.createElement("div");
   textContainer.className = "col-md-8";
@@ -342,26 +360,50 @@ const createProductCard = (dishData) => {
   const quantity =
     userData.cart.find((item) => item.dishId === dishData._id)?.quantity || 0;
   quantityText.innerHTML = `Quantity: <small>${quantity}</small>`;
-
+  const totalAmount = Number(quantity) * Number(dishData.price);
   const buttonContainer = document.createElement("div");
   buttonContainer.className =
     "d-flex justify-content-start align-items-center gap-3";
 
   const removeButton = createButton("Remove", "btn btn-danger");
+  removeButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    removeProductFromCart(dishData._id);
+  });
   const confirmButton = createButton("Confirm", "btn btn-success");
-  confirmButton.addEventListener("click",()=>{
-    alert("You will be redirected to payment page!")
-    window.location.pathname = "/payment/payment-method.html"
-    
-  })
+  confirmButton.addEventListener("click", async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/order/add-order/${userData.email}/${dishData._id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const data = await response.json();
+      if (data.status==200) {
+        userData.cart = data.orders
+        console.log(userData);
+        
+        localStorage.setItem("currentOrderId", userData.orders.orderId);
+        alert(
+          "Payable amount is: " +
+            totalAmount +
+            " You will be redirected to payment page!"
+        );
+        window.location.pathname = "/payment/payment-method.html";
+      }
+    } catch (error) {}
+  });
 
   buttonContainer.append(removeButton, confirmButton);
   cardBody.append(cardTitle, cardText, quantityText, buttonContainer);
   textContainer.appendChild(cardBody);
   container.append(img, textContainer);
-  document.getElementById("cartContainer").appendChild(container);
+  const cartContainer = document.getElementById("cartContainer");
+  cartContainer.style.height = "auto";
+  cartContainer.appendChild(container);
 };
-
 const createButton = (text, className) => {
   const button = document.createElement("button");
   button.type = "button";
@@ -372,7 +414,8 @@ const createButton = (text, className) => {
 
 if (
   window.location.pathname === "/index.html" ||
-  window.location.pathname === "/"
+  window.location.pathname === "/" ||
+  window.location.pathname === "/menu.html"
 ) {
   fetchDishes();
 }
@@ -382,3 +425,49 @@ if (window.location.pathname === "/cart/my-cart.html") {
   dishCart.style.display = "none";
   getCartDataFromServer(dishCart);
 }
+
+function createMenuCard(dish) {
+  const colDiv = document.createElement("div");
+  colDiv.id = dish._id;
+  colDiv.classList.add("col", "dish-container");
+  const cardDiv = document.createElement("div");
+  cardDiv.style.paddingBottom = "3rem";
+  cardDiv.classList.add("card", "h-100", "position-relative");
+  const img = document.createElement("img");
+  img.src = dish.image;
+  img.classList.add("card-img-top");
+  img.alt = dish.altText;
+  cardDiv.appendChild(img);
+  const cardBodyDiv = document.createElement("div");
+  cardBodyDiv.classList.add("card-body");
+  const cardTitle = document.createElement("h5");
+  cardTitle.classList.add("card-title");
+  cardTitle.textContent = dish.name;
+  const cardText = document.createElement("p");
+  cardText.classList.add("card-text");
+  cardText.textContent = dish.description;
+  const cardPrice = document.createElement("p");
+  cardPrice.classList.add("card-text");
+  cardPrice.innerHTML = `<strong>Price:</strong> ₹${dish.price}`;
+  const orderButton = document.createElement("button");
+  orderButton.style.bottom = "1rem";
+  orderButton.classList.add("btn", "btn-primary", "position-absolute");
+  orderButton.textContent = "Order Now";
+  orderButton.addEventListener("click", addOrderButtonListener);
+  cardBodyDiv.appendChild(cardTitle);
+  cardBodyDiv.appendChild(cardText);
+  cardBodyDiv.appendChild(cardPrice);
+  cardBodyDiv.appendChild(orderButton);
+  cardDiv.appendChild(cardBodyDiv);
+  colDiv.appendChild(cardDiv);
+  return colDiv;
+}
+
+const renderDishesOnMenu = () => {
+  const menuContainer = document.getElementById("menu-container");
+  dishes.forEach((dish) => {
+    const dishCard = createMenuCard(dish);
+    menuContainer.appendChild(dishCard);
+  });
+  document.getElementById("cartCounter").textContent = cart.length;
+};

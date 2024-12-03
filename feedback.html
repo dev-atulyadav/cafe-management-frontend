@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Feedback</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Crimson+Text:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #8a2be2; /* Violet background */
+            font-family: 'Crimson Text', serif; /* Elegant font */
+            color: #000; /* Black text */
+        }
+
+        .content {
+            background-color: #d3d3d3; /* Grey page background */
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+        }
+
+        .section {
+            background-color: #fff; /* White sections */
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-bottom: 1.5rem; /* Spacing between sections */
+        }
+
+        h2 {
+            color: #000; /* Black color for headings */
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .btn-custom {
+            background-color: #007bff; /* Primary button color */
+            color: #fff; /* White text for contrast */
+            font-weight: bold;
+        }
+
+        .navbar-custom {
+            background-color: #8a2be2; /* Violet background for navbar */
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important; /* White text for navbar links */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">DWARKA SECTOR 10 RESTRO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu.html">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./index.html#best-meal">Best Meals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="offer.html">Special Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedback.html">Feedback</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a
+                          class="nav-link dropdown-toggle"
+                          href="#"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          See more
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <a class="dropdown-item" href="feedback.html">Feedback</a>
+                          </li>
+                          <li><a class="dropdown-item" href="#">Veg Dishes</a></li>
+                          <li><a class="dropdown-item" href="#">Non-veg Dishes</a></li>
+                          <li>
+                            <a class="dropdown-item" href="#">Drinks and Beverages</a>
+                          </li>
+                        </ul>
+                      </li>
+                </ul>
+            </div>
+        </div>
+        
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container content mt-4">
+        <div class="section">
+            <h2>Customer Feedback</h2>
+            <p>Your feedback is important to us! Please share your thoughts, upload photos or videos, and ask any questions about our offers and events.</p>
+            <form id="feedbackForm" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="customerName" class="form-label">Your Name:</label>
+                    <input type="text" class="form-control" id="customerName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="customerEmail" class="form-label">Your Email:</label>
+                    <input type="email" class="form-control" id="customerEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="customerFeedback" class="form-label">Your Feedback:</label>
+                    <textarea class="form-control" id="customerFeedback" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="mediaUpload" class="form-label">Upload Photos or Videos:</label>
+                    <input type="file" id="mediaUpload" class="form-control" accept="image/*, video/*" multiple>
+                </div>
+                <div class="mb-3">
+                    <label for="customerQuery" class="form-label">Questions About Bargains or Events:</label>
+                    <textarea class="form-control" id="customerQuery" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-custom">Submit Feedback</button>
+            </form>
+        </div>
+
+        <!-- Customer Connection Section for Modified Orders -->
+        <div class="section">
+            <h2>Customer Connection</h2>
+            <p>If you have specific requests for modified orders, please let us know! Our team is here to help make your dining experience perfect.</p>
+            <form id="modifiedOrderForm">
+                <div class="mb-3">
+                    <label for="orderDetails" class="form-label">Order Details & Modifications:</label>
+                    <textarea class="form-control" id="orderDetails" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="contactNumber" class="form-label">Your Contact Number:</label>
+                    <input type="tel" class="form-control" id="contactNumber" required>
+                </div>
+                <button type="submit" class="btn btn-custom">Submit Order Modifications</button>
+            </form>
+        </div>
+
+        <!-- Discount Code Section -->
+        <div class="section">
+            <h2>Special Discount Codes</h2>
+            <p>Enter your email to receive exclusive discount codes for your next visit!</p>
+            <form id="discountForm">
+                <div class="mb-3">
+                    <label for="discountEmail" class="form-label">Your Email:</label>
+                    <input type="email" class="form-control" id="discountEmail" required>
+                </div>
+                <button type="submit" class="btn btn-custom">Get Discount Code</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Basic form submission handling (can be improved with server-side logic)
+        document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Feedback submitted! Thank you for your input.');
+            this.reset();
+        });
+
+        document.getElementById('modifiedOrderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Order modifications submitted! We will contact you shortly.');
+            this.reset();
+        });
+
+        document.getElementById('discountForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Discount code sent to your email!');
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>
